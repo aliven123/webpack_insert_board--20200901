@@ -1,0 +1,139 @@
+@import '../../assets/common.less';
+.more(){
+	color:@blue;
+	font-size: 14px;
+	cursor: pointer;
+	&:hover{
+		background:@hvblue;
+		color:white;
+	}
+	.iconxiala{
+		font-size: 18px;
+	}
+}
+.active(@color:@hvblue,@border:2px solid @hvblue){
+	color:@color;
+	border-bottom:@border;
+};
+#rank_indicators{
+  width:100%;
+  // border: 1px solid rgba(20,81,154,0.2);
+  // box-shadow: 0px 0px 3px @gray;
+  .wx_ctn{
+    background:white;
+    box-shadow: 0 0 5px black;
+    position: absolute;
+    left:50%;
+    top:50%;
+    z-index:100;
+    transform:translate(-50%,-50%);
+    .headers{
+      padding:5px;
+  	  color:white;
+      .box_flex(row nowrap,space-between,center);
+      background:@blue;
+      .close_icon{
+        &:hover{
+          color:@hvred;
+          cursor: pointer;
+        }
+      }
+    }
+    .mainctn{
+      padding:10px;
+      p{
+        margin-top:5px;
+		text-align: center;
+        color:@hvblue;
+      }
+    }
+  }
+  .indicator_title{
+	  width: 100%;
+	  .box_flex(row wrap,space-between,center);
+	  text-align: center;
+	  padding-bottom: 10px;
+	  border-bottom: 1px solid rgba(20,81,154,0.2);
+	  .indicator{
+			flex: 1;
+			cursor: pointer;
+			padding:5px 0;
+			&:hover{
+				// color:white;
+			}
+	  }
+	  .active{
+	  	.active();
+	  }
+	  .more{
+	  	flex: 1;
+	  	padding:5px 0;
+	  	.more();
+	  }
+  }
+  .t_head,.t_body{
+    width: 100%;
+    table{
+      width:100%;
+      border-collapse:collapse;
+      table-layout:fixed;
+	  text-align: center;
+	  .up{
+		  color:@red;
+	  }
+	  .down{
+		  color:@green;
+	  }
+    }
+  }
+  .t_head{
+    border-bottom: 1px solid rgba(20,81,154,0.2);
+	margin-bottom:5px;
+	th{
+		text-align: center;
+	}
+  }
+  .t_body{
+    width:100%;
+	// height:315px;
+	overflow: auto;
+	cursor: pointer;
+    tr{
+      &:hover{
+        background:@hvblue;
+		color:white;
+      }
+	  td{
+		  .indicator_img{
+			  text-align:right;
+			  img{
+				  display: inline-block;
+			  }
+		  }
+		  .rank_des{
+			  font-size: 13px;
+			  color:@hvred;
+		  }
+	  }
+    }
+  }
+  .fade-enter-active, .fade-leave-active {
+      transition: opacity 0.6s
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active, 2.1.8 版本以下 */ {
+      opacity: 0
+  }
+  .more_indicators{
+	  text-align: center;
+	  padding:5px;
+	  span{
+		 font-size:14px; 
+	  }
+	  // .iconxiala{
+		  &:hover{
+			  background:@hvblue;
+			  color:white;
+		  }
+	  // }
+  }
+}

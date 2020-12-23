@@ -1,0 +1,50 @@
+@import "../../assets/common.less";
+.shadow(@left:0,@right:0,@blur:5px,@clo:@border1color){
+    box-shadow: @left @right @blur @clo;
+}
+.select_board{
+    .shadow();
+    background:white;
+    position: absolute;
+    z-index:101;
+    border-radius: 4px;
+    overflow: hidden;
+    font-size: 14px;
+    .header{
+        padding:5px 10px;
+        background: @blue;
+		color:white;
+		li{
+			span{
+				background:none;
+				border:none;
+			}
+		}
+        &:hover{
+            cursor: move;
+            background:@hvblue;
+        }
+        .btnarr{
+            >span{
+                cursor: pointer;
+                &:hover{
+                    color:@hvred;
+                }
+            }
+        }
+        .add_section_relative{
+          position: relative;
+        }
+
+    }
+    .mainsec{
+        width:100%;height:100%;
+        position:absolute;left:0;top:0;
+        //主内容盒子的padding;
+        padding:40px 10px 10px 10px;
+        z-index:-100;
+		span{
+			border:none;
+		}
+    }
+}
