@@ -834,7 +834,6 @@ export default {
 		window.addEventListener('resize',()=>{
 			this.mychart.resize();
 		})
-		console.log('测试')
 	},
 	beforeDestroy(){
 		clearTimeout(this.$el.updateCodeInfo);
