@@ -7,11 +7,11 @@ const reset_indic = {
 	rate: '--',
 	img: '购买'
 };
-
 const reset_score = {
 	positive: '点击查看多头策略',
 	negative: '点击查看空头策略'
 };
+const warning='声明：此仅作为研究参考，不构成任何投资建议；依此入市，盈亏自负。';
 export {
 	reset_indic
 };
@@ -21,6 +21,7 @@ export default {
 		return {
 			lai_url: null,
 			username: null,
+			warning,
 			btn_obj: {
 				active: null,
 				list: {
@@ -139,7 +140,8 @@ export default {
 			handler: function(newval, oldval) {
 				this.code = newval.code;
 				this.lai_url = this.url_obj.lai_url;
-				this.username = this.basefn.getUsername();
+				// this.username = this.basefn.getUsername();
+				this.username = 123;
 				this.investmentAdvice();
 			}
 		}

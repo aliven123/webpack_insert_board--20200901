@@ -265,7 +265,7 @@ export default {
 			// 测试确认订单单页面
 				const list=this.order_list.join("_");
 				const username=this.basefn.localUsername();
-				const src=`http://127.0.0.1:8848/order_confirm/%E7%A1%AE%E8%AE%A4%E8%AE%A2%E5%8D%95.html?orderids=${list}&username=${username}`;
+				const src=`http://127.0.0.1:8848/order_confirm/index.html?orderids=${list}&username=${username}`;
 				window.open(src,'_blank');
 			// 测试确认订单单页面
 			this.$parent.$emit('closeModel',{

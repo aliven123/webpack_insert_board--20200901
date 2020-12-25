@@ -22,6 +22,7 @@
 		>
 			请登录后点击下方查看更多策略！
         </p>
+		<p style="font-size: 14px;color:gray;margin:4px 0">{{warning}}</p>
       </div>
 	  <div class="advice_title clearfix">
 	  		<div class="fl buyStg" 

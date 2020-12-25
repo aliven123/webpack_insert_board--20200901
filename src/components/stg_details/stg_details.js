@@ -718,5 +718,6 @@ export default {
 		this.$on('closeModel',this.closeModel)
 		this.HomeCtnHeight();
 		
+		
 	}
 }
