@@ -128,18 +128,18 @@
 			</ul>
 			<div v-if="board.def!=false" class="board_ctn boxs">
 				<div class="tog_board boxs">
-					<div v-for="(item,key) in board.nav_list" v-text="item.des" :class="['boxs fl nav_btn',{'active':key==board.def}]">
+					<div v-for="(item,key) in board.nav_list"
+					 v-text="item.des"
+					  :class="['boxs fl nav_btn',{'active':key==board.def}]"
+					 @click="handleBoard(key)">
 					</div>
 				</div>
 				<!-- actionFn为board各组件内部触发的函数，触发当前组件（def）,对应的handlefn -->
 
-				
-				<component 
-					:is="board.def" 
-					:init_obj="board.datas" 
-					@actionFn="actionFn(board.def,$event)">
-				</component>
-				</ul>
+				<keep-alive>
+					<component :is="board.def" :init_obj="board.datas" @actionFn="actionFn(board.def,$event)">
+					</component>
+				</keep-alive>
 			</div>
 		</template>
 	</div>

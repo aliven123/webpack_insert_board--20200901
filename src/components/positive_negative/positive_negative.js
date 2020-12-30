@@ -271,7 +271,7 @@ export default {
 				Object.assign(data, {
 					username: this.username,
 					param: up_down,
-					type: indic_name
+					type: indic_name=='综合排序'?'综合评分':indic_name
 				});
 			};
 			const url = '/investment_advice/';

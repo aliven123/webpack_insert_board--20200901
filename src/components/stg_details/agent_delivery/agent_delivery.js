@@ -265,8 +265,12 @@ export default {
 			// 测试确认订单单页面
 				const list=this.order_list.join("_");
 				const username=this.basefn.localUsername();
-				const src=`http://127.0.0.1:8848/order_confirm/index.html?orderids=${list}&username=${username}`;
-				window.open(src,'_blank');
+				// 传递过去的from_ur中有&符号，防止确认页面在拿到url，以&分割键值对时，错误分组，导致错误
+				let from_url=location.href.replace(/&/g,'[a_t_r]');
+				// let from_url='https://nujin.com/forum.php?mod=forumdisplay&fid=225&a=b'.replace(/&/g,'[a_t_r]');
+				from_url=from_url.replace(/=/g,'[e_t_r]');
+				const src=`http://127.0.0.1:8848?orderids=${list}&username=${username}&from_url=${from_url}`;
+				window.open(src,'_self');
 			// 测试确认订单单页面
 			this.$parent.$emit('closeModel',{
 				agent_delivery:{hishow:false},
@@ -404,13 +408,13 @@ export default {
 		place_order: () => import("components/pop_over/pop_over.vue")
 	},
 	created() {
-		console.log(this.IsPC);
-		if(this.IsPC){
+		
+		/* if(this.IsPC){
 			this.select_datas.styleobj.minWidth="600px"
 			this.select_datas.styleobj.width="80%"
 		}else{
 			
-		}
+		} */
 		this.init_data();
 		this.currentMenu('add')
 	},

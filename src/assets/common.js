@@ -109,7 +109,7 @@ const getUsername=function(){
 const localUsername=function(){
 	let username = getUsername();
 	if(location.href.includes('localhost')){
-		username='nvjan';
+		username='lcs11';
 	}else{
 		if (!username) {
 			username='';

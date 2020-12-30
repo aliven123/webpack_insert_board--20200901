@@ -187,6 +187,10 @@ export default {
 						des:'策略排行',
 						handleFn:'emitClphFn'
 					},
+					ngph:{
+						des:'牛股排行',
+						handleFn:'emitClphFn'
+					},
 					/* yaowen:{
 						des:'要闻'
 					},
@@ -248,6 +252,7 @@ export default {
 	components:{
 		input_search:()=>import('components/input_search/input_search.vue'),
 		clph:()=>import('components/rank_indicators/rank_indicators.vue'),
+		ngph:()=>import('components/rank_stocks/rank_stocks.vue'),
 		[Types.STG_DETAILS]:()=>import('components/stg_details/stg_details.vue')
 	},
 	computed:{
@@ -288,6 +293,9 @@ export default {
 		}
 	},
 	methods: {
+		handleBoard(def){
+			this.board.def=def;
+		},
 		actionFn(def,datas){
 			// 内部组件触发的函数，都经过这个函数触发，进行对应的分发
 			console.log(def,datas);

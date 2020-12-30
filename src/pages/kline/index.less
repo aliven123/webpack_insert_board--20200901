@@ -216,15 +216,17 @@
 			flex: 1;
 			cursor: pointer;
 			padding:3px 0;
+			.active(@color:black,@border:2px solid white);
 			&:hover{
-				color:white;
-				background:@hvblue;
+				// color:white;
+				// background:@hvblue;
+				.active();
 			}
 		}
 		.active{
 			.active();
-			color:white;
-			background:@hvblue;
+			// color:white;
+			// background:@hvblue;
 		}
 	  }
   }
