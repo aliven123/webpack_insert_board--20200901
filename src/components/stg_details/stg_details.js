@@ -15,6 +15,7 @@ export default {
 		return {
 			profit_picture: null,
 			SecurityID,
+			vip_level:false,
 			strategy: {
 				need_back_test: false,
 				locking: false, //现有持仓和下单统计蒙版的开关
@@ -497,6 +498,20 @@ export default {
 			});
 			this.HomeCtnHeight(null);
 		},
+		getAuthorType(){
+			const data = {
+				username: this.basefn.getUsername(),
+				type:1
+			},src = '/account/get_author_type/';
+			// this.SecurityID=data.code;
+			if(location.href.includes('localhost')){data.username='nujin'}
+			if (data.username===false) {
+				return;
+			};
+			this.basefn.ajaxfn(`${this.url_obj.shuo_url}${src}`, 'POST', 'json', data, (res) => {
+				this.vip_level=res.vip_level!=='' ? true : false;
+			})
+		},
 		getAllStg(callback, retestsign = false) {
 			/*初始化策略详细数据*/
 			const {
@@ -708,16 +723,13 @@ export default {
 			// 根据努金发帖传递过来url,查看是否有sort_id,如果sort_id有值，则getAllStg的data中indicname为空字符串
 			sort_id = url_sort_id;
 		};
-		
+		this.getAuthorType();
 		this.getAllStg();
 		this.initSearchPools();
 		// console.log(this.strategy.base_info)
 	},
 	mounted() {
-		console.log('-----------测试-----------------',location)
 		this.$on('closeModel',this.closeModel)
 		this.HomeCtnHeight();
-		
-		
 	}
 }

@@ -13,7 +13,11 @@
 			</ul>
 			<ul class="place_order boxs">
 				<li class="order_type_ctn boxs">
-					<input class="order_btn" type="button" value="立即购买" @click="getPaymentUrl" />
+					<input class="order_btn"
+						type="button"
+						value="立即购买"
+						@click="getPaymentUrl"
+					/>
 					<div>
 						<span v-for="(item,index) in pay_type.list" :class="[item.cls,{'active':index==pay_type.def}]" @click="handlePayType(index)">
 						</span>

@@ -61,7 +61,7 @@
 					  {{item[key]}}<i class="rank_des">购买</i>
 				  </span>
 				  <span v-else-if="key=='img'" :class="{'indicator_img':key=='img'}">
-					<img :src="'https://data.aupool.cn'+item[key]" v-if="item[key]!=undefined" />
+					<img :src="'https://362965b2f6.picp.vip'+item[key]" v-if="item[key]!=undefined" />
 				  </span>
 				  <span v-text="item[key]" v-else></span>
 				</td>

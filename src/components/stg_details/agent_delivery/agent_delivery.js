@@ -258,10 +258,13 @@ export default {
 				this.status='请选择要支付的序号！'
 				return;
 			};
-			this.$emit('AgentDeliveryOrder',{
+			/* this.$emit('AgentDeliveryOrder',{
 				hishow:true,
 				order_list:this.order_list,
 			});
+			 */
+			
+			
 			// 测试确认订单单页面
 				const list=this.order_list.join("_");
 				const username=this.basefn.localUsername();
@@ -272,12 +275,15 @@ export default {
 				const src=`http://127.0.0.1:8848?orderids=${list}&username=${username}&from_url=${from_url}`;
 				window.open(src,'_self');
 			// 测试确认订单单页面
-			this.$parent.$emit('closeModel',{
+			
+			
+			
+			/* this.$parent.$emit('closeModel',{
 				agent_delivery:{hishow:false},
 				weixin:{
 					hishow:false
 				}
-			})
+			}) */
 		},
 		HandleDelivery() {
 			const {
@@ -307,30 +313,6 @@ export default {
 			console.log(data);
 			return data;
 		},
-		async handleModify() {
-			// 修改
-			const data = this.gatherDatas('change');
-			if (data.username === false) {
-				if (location.href.includes('localhost')) {
-					data.username = 'lcs11';
-				}else{
-					alert('请登录后再试！')
-					return
-				};
-			};
-			if(!this.inspectValue(data)){return};
-			const {
-				result,
-				reason,
-				error
-			} = await this.triggerHttp('POST', data);
-			console.log(result);
-			const action_txt=this.action_menus.list[this.action_menus.def].txt;
-			this.status = `${action_txt}:${reason}`;
-			if(result==='ok'){
-				this.init_data();
-			};
-		},
 		inspectValue(data){
 			// 增加和修改时，输入框的检测函数
 			const def=this.action_menus.def;
@@ -356,6 +338,30 @@ export default {
 				}
 			}
 			return check_result
+		},
+		async handleModify() {
+			// 修改
+			const data = this.gatherDatas('change');
+			if (data.username === false) {
+				if (location.href.includes('localhost')) {
+					data.username = 'lcs11';
+				}else{
+					alert('请登录后再试！')
+					return
+				};
+			};
+			if(!this.inspectValue(data)){return};
+			const {
+				result,
+				reason,
+				error
+			} = await this.triggerHttp('POST', data);
+			console.log(result);
+			const action_txt=this.action_menus.list[this.action_menus.def].txt;
+			this.status = `${action_txt}:${reason}`;
+			if(result==='ok'){
+				this.init_data();
+			};
 		},
 		async handleAdd() {
 			// 增加

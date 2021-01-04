@@ -42,6 +42,7 @@
 				</div>
 				<div>
 					<input type="button" value="一键代发"
+						v-if="vip_level===true"
 						@click="handleAgent"
 					>
 					<input type="button" 
