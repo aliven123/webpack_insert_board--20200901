@@ -23,12 +23,9 @@ if(env=='development'){
 	};
 }else if(env=='production'){
 	Vue.prototype.url_obj={
-		// lai_url:'https://data.aupool.cn',
-		// bin_url:'https://data.aupool.cn',
-		// shuo_url:'https://data.aupool.cn',
-		lai_url:'https://362965b2f6.picp.vip',
-		bin_url:'https://362965b2f6.picp.vip',
-		shuo_url:'https://362965b2f6.picp.vip'
+		lai_url:'https://data.nujin.com',
+		bin_url:'https://data.nujin.com',
+		shuo_url:'https://data.nujin.com'
 	};
 };
 

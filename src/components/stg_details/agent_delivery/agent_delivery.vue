@@ -35,6 +35,7 @@
 							 >
 								<td v-for="(val,name) in thead"
 									 v-if="name!=='orderid'"
+									 :key="name"
 								>
 								<span v-if="name==='id'">
 									<input type="checkbox"
@@ -75,9 +76,27 @@
 					  	{{thead[name]}}:
 					  </p>
 					  <p class="val boxs">
+						  <!-- <input_search v-if="name==='indicname'" /> -->
 						  <template v-if="item.html===undefined&&item.type===undefined"">
 							  <!-- 普通的input输入框 -->
+							  <input_search 
+								v-if="name==='indicname'"
+								  :init_obj="searchDatas" 
+								  :ipt_txt="searchDatas.ipt_str" 
+								  @uptateUllist="initSearchPools"
+								  @current_txt="current_txt('self',$event)"
+								  @targetSecurity="getIptTxt('self',$event)"
+							 />
+							 <input_search
+								v-else-if="name==='code'"
+							 	:init_obj="codeDatas"
+							 	:ipt_txt="codeDatas.ipt_str"
+							 	@uptateUllist="initCodePools"
+								@current_txt="current_code('self',$event)"
+							 	@targetSecurity="getCodeTxt('self',$event)"
+							 />
 							  <input
+								 v-else
 								 type="text"
 								 :disabled="item.disabled"
 								 class="boxs" v-model.trim="item.value"

@@ -725,8 +725,7 @@ export default {
 		};
 		this.getAuthorType();
 		this.getAllStg();
-		this.initSearchPools();
-		// console.log(this.strategy.base_info)
+		// this.initSearchPools();
 	},
 	mounted() {
 		this.$on('closeModel',this.closeModel)

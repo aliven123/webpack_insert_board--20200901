@@ -1,3 +1,4 @@
+const init_str='--';
 export default {
 	name: 'aupool_agent_delivery',
 	data: function() {
@@ -7,7 +8,7 @@ export default {
 				head_txt: '代理转发',
 				styleobj: { /*如果传递了bottom,初始位置就以bottome为准，否则初始位置就居中*/
 					'minWidth': '340px',
-					'height': '550px',
+					'height': '500px',
 					'background': 'white',
 					/*背景颜色*/
 					'multiple': {
@@ -36,6 +37,10 @@ export default {
 			edit_info: {
 				//所有对象中，没有html这个键的，默认都是input
 				// type默认都是text,有type的，以type为准
+				id:{
+					value: '1',
+					disabled: true
+				},
 				orderid: {
 					value: '',
 					disabled: true
@@ -47,6 +52,16 @@ export default {
 				code: {
 					value: '',
 					disabled: true,
+				},
+				consignee: {
+					value: '',
+					disabled: false,
+				},
+				time:{
+					value: '',
+					disabled: false,
+					type:'number',
+					min:0
 				},
 				need_state: {
 					value: '',
@@ -60,16 +75,6 @@ export default {
 				phone: {
 					value: '',
 					disabled: false,
-				},
-				consignee: {
-					value: '',
-					disabled: false,
-				},
-				time:{
-					value: '',
-					disabled: false,
-					type:'number',
-					min:0
 				}
 			},
 			order_list:[],//点击支付时，checkbox选中的orderid
@@ -78,7 +83,7 @@ export default {
 				def:-1,
 				datas: [] 
 			},
-			status: '--',
+			status:init_str,
 			action_menus: {
 				def: false,//默认未选中增加/修改/删除
 				list: {
@@ -95,6 +100,50 @@ export default {
 						txt: '删除'
 					}
 				}
+			},
+			searchDatas:{
+			  // 搜索框的所有股票等数据
+				ipt_str:'',
+				list_arr:[],
+			  // 下拉框的样式
+			  placeholder:'策略名',
+			  ipt_style:{
+				  height:'20px',
+				  paddingLeft:'5px',
+				  background:'white',
+				  border:'1px solid black',
+				  color:'black'
+			  },
+			  ul_style:{
+			    background:'gray',
+			    color:'black',
+			    display: 'block',
+			    width:'100%',
+			    maxHeight:'120px',
+			    textAlign:'left'
+			  }
+			},
+			codeDatas: {
+				// 搜索框的所有股票等数据
+				ipt_str: '',
+				list_arr: [],
+				// 下拉框的样式
+				placeholder: '名称 / 代码 / 首字母',
+				ipt_style: {
+					height:'20px',
+					paddingLeft:'5px',
+					background:'white',
+					border:'1px solid black',
+					color:'black'
+				},
+				ul_style: {
+					background: 'gray',
+					color: 'white',
+					display: 'block',
+					width: '100%',
+					maxHeight: '120px',
+					textAlign: 'left'
+				}
 			}
 		}
 	},
@@ -107,6 +156,67 @@ export default {
 		}
 	},
 	methods: {
+		initCodePools() {
+			// search_pools
+			/*给input的下拉列表请求缓存数据*/
+			let list = sessionStorage.searchlist;
+			console.log(list==='undefined');
+			if (list != undefined && list!='undefined') {
+				this.codeDatas.list_arr = JSON.parse(list);
+			} else {
+				const src = '/get_code_list/';
+				this.basefn.ajaxfn(`${this.url_obj.lai_url}${src}`, "POST", "json", {
+					c_board: 'all'
+				}, (res) => {
+					console.log(res);
+					if(res && res.data.length>0){
+					  this.codeDatas.list_arr=res.data;
+					  sessionStorage.searchlist = JSON.stringify(res.data);
+					}
+				});
+			};
+		},
+		getCodeTxt(self, data) {
+			//获得搜索结果，切换证券代码，重新刷新数据
+			console.log(data.split(' '));
+			console.log(data);
+			if (data.split(' ').length > 0) {
+				this.setCodeStr(data.split(' ')[0]);
+				this.edit_info.code.value=data.split(' ')[0];
+			}
+		},
+		getIptTxt(self,val){
+			console.log(val);
+			// this.searchDatas.ipt_str=val;
+			this.setIptStr(val);
+			this.edit_info.indicname.value=val;
+			
+		},
+		current_txt(self,val){
+			console.log(val);
+			this.edit_info.indicname.value=val.input_txt;
+		},
+		current_code(self,val){
+			console.log(val);
+			this.edit_info.code.value=val.input_txt;
+		},
+		initSearchPools() {
+		  console.log(sessionStorage.indicatorlist);
+		  /*给input的下拉列表请求缓存数据*/
+		  let list = sessionStorage.indicatorlist;
+		  if (list==='undefined' || list === undefined) {
+		    const src = '/account/search/';
+		    this.basefn.ajaxfn(`${this.url_obj.lai_url}${src}`, "GET", "json", {}, (res) => {
+		      console.log(res);
+			  if(res && res.length>0){
+				  this.searchDatas.list_arr=res;
+				  sessionStorage.indicatorlist = JSON.stringify(res.data);
+			  }
+		    });
+		  }else{
+			  this.searchDatas.list_arr = JSON.parse(list);
+		  };
+		},
 		selectAll(){
 			const order_list=[];
 			if(this.order_list.length===0){
@@ -147,6 +257,7 @@ export default {
 			console.log(item);
 			this.delivery_obj.def=item.orderid;
 			// this.order_list=[item.orderid];
+			this.status=init_str;
 			const filter_result=this.order_list.filter((current,index)=>{
 				if(current===item.orderid){
 					this.order_list.splice(index,1)
@@ -186,6 +297,8 @@ export default {
 			console.log(this.edit_info);
 			// 切换行，需要查看发货状态，切换对应disabled的数据
 			this.handleDisabled(obj.need_state.value);
+			this.setIptStr(item.indicname);
+			this.setCodeStr(item.code);
 		},
 		triggerHttp(method, data) {
 			const src = `/order/taobao/`;
@@ -207,8 +320,7 @@ export default {
 				}
 			};
 			const result = await this.triggerHttp('GET', data);
-			console.log(result);
-			if (result) {
+			if (result && Object.prototype.toString.call(result).includes('Array')) {
 				const thead = Object.keys(this.thead);
 				const arr = [];
 				for (let item of result) {
@@ -232,10 +344,17 @@ export default {
 		},
 		currentMenu(name) {
 			// 点击增加/修改，切换菜单
+			this.status=init_str;
 			this.action_menus.def = name;
 			if (name === 'add') {
 				this.addReset();
 			}
+		},
+		setIptStr(ipt_str){
+			this.searchDatas.ipt_str=ipt_str;
+		},
+		setCodeStr(ipt_str){
+			this.codeDatas.ipt_str=ipt_str;
 		},
 		addReset() {
 			// 点击增加菜单，重置edit_info
@@ -249,13 +368,14 @@ export default {
 				}
 			};
 			this.edit_info.need_state.value = '需要';
+			this.setIptStr('');
 
 		},
 		AgentDeliveryOrder(){
 			// 一键代发触发的函数
-			this.status='--'
+			this.status=init_str;
 			if(this.order_list.length===0){
-				this.status='请选择要支付的序号！'
+				this.status='请选择要支付的策略！'
 				return;
 			};
 			/* this.$emit('AgentDeliveryOrder',{
@@ -286,6 +406,7 @@ export default {
 			}) */
 		},
 		HandleDelivery() {
+			this.status=init_str;
 			const {
 				def,
 				list
@@ -294,7 +415,7 @@ export default {
 				this.status='请点击:新增/修改/删除等指令';
 				return;
 			}else{
-				this.status='--';
+				this.status=init_str;
 			};
 			const action = list[def].action;
 			this[action]();
@@ -316,7 +437,7 @@ export default {
 		inspectValue(data){
 			// 增加和修改时，输入框的检测函数
 			const def=this.action_menus.def;
-			console.log(def,data);
+			this.status=init_str;
 			const black_list={
 				add:['orderid','username'],
 				modify:['orderid','username']
@@ -324,16 +445,19 @@ export default {
 			let check_result=true;
 			if(data.need_state==='不需要'){
 				//不发货时不用检测的数据
-				black_list.add.push('address','phone','consignee')
+				black_list[def].push('address','phone','consignee')
 			};
 			for(let [key,val] of Object.entries(data)){
-				console.log(key);
 				if(black_list[def].includes(key)){
 					continue;
 				};
-				if(val===''){
+				if(key==='phone' && !(/^1[3|4|5|6|7|8][0-9]\d{7,12}$/.test(val))){
 					check_result=false;
-					alert(`${this.thead[key]}输入不合法`)
+					this.status=`${this.thead[key]}输入不合法`
+					break;
+				}else if(val===''){
+					check_result=false;
+					this.status=`${this.thead[key]}输入不合法`
 					break;
 				}
 			}
@@ -411,16 +535,10 @@ export default {
 		
 	},
 	components: {
-		place_order: () => import("components/pop_over/pop_over.vue")
+		place_order: () => import("components/pop_over/pop_over.vue"),
+		input_search:()=>import("components/input_search/input_search.vue")
 	},
 	created() {
-		
-		/* if(this.IsPC){
-			this.select_datas.styleobj.minWidth="600px"
-			this.select_datas.styleobj.width="80%"
-		}else{
-			
-		} */
 		this.init_data();
 		this.currentMenu('add')
 	},

@@ -71,7 +71,7 @@ export default{
 			this.$emit('uptateUllist');
 		},
 		searchResult(e,content=undefined){/*输入内容的时候，更新ul中li的数据*/
-			console.log(content);
+			console.log(content,this.input_txt.toUpperCase());
 			clearTimeout(this.debounce);
 			this.debounce=setTimeout(()=>{
 				// 函数防抖的写法

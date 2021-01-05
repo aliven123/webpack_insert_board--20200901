@@ -34,7 +34,7 @@
 			  >
 				<td v-for="(key,i) in indicators.head_arr" :key="i">
 				  <span v-if="key=='img'" :class="{'indicator_img':key=='img'}">
-					<img :src="'https://362965b2f6.picp.vip'+item[key]" v-if="item[key]!=undefined" />
+					<img :src="'https://data.nujin.com'+item[key]" v-if="item[key]!=undefined" />
 				  </span>
 				  <span v-text="item[key]" v-else></span>
 				</td>
