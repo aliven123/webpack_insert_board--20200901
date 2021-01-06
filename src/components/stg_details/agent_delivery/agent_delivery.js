@@ -378,13 +378,6 @@ export default {
 				this.status='请选择要支付的策略！'
 				return;
 			};
-			/* this.$emit('AgentDeliveryOrder',{
-				hishow:true,
-				order_list:this.order_list,
-			});
-			 */
-			
-			
 			// 测试确认订单单页面
 				const list=this.order_list.join("_");
 				const username=this.basefn.localUsername();

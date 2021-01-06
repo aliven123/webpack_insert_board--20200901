@@ -19,11 +19,11 @@
 				<li v-for="(item,name) in order_data"
 					v-if="li_hishow(name)"
 					class="order_data">
-					
 					<template v-if="name==='price'||name==='discount_price'">
-						
+							
 							<span class="order_des" v-if="item.hishow===true">
 								{{item.txt}}
+								<i v-if="name==='price'">订单价格</i>
 							</span>
 							<i class="order_val" v-if="item.hishow===true">
 								{{item.val}}

@@ -197,6 +197,7 @@ export default {
 			name: "KDJT",
 			type: "专家"
 		} */
+		
 	},
 	components: {
 		profit_line: () => import('components/profit_line/profit_line.vue'),
@@ -362,7 +363,7 @@ export default {
 			};
 		},
 		handleAgent(child_data){
-			// 代理转发的逻辑
+			// 一键代发的逻辑
 			console.log(child_data);
 			if(child_data?.hishow===false){
 				this.agent_delivery.hishow=false;
@@ -398,25 +399,40 @@ export default {
 				}
 			}
 		},
-		AgentDeliveryOrder(self,{hishow,order_list}){
-			// 代理转发中支付命令，触发的函数
-			this.$store.commit(Types.setLocationEl, {
-				element: this.$el
-			});
-			this.agent_orders = {
-				hishow,
-				data:{
-					order_list:{
-						txt:'订单号',
-						val:order_list
-					}
+		orderConfirm(){
+			// 跳转到确认订单界面
+				let username = this.basefn.getUsername();
+				if (location.href.includes('localhost')) {
+					username = 'lcs11';
+				};
+				const list='false';
+				
+				const orders={
+					SecurityID:this.strategy.profit[0] ? this.strategy.profit[0].val : 'false',
+					indic_name:this.c_component.datas.name,
+					indic_type:this.c_component.datas.type,
+					indic_price:this.strategy.price,
+					discount_price:this.strategy.discount_price!==undefined?this.strategy.discount_price:'false'
 				}
-			};
+				
+				
+				// 传递过去的from_ur中有&符号，防止确认页面在拿到url，以&分割键值对时，错误分组，导致错误
+				let from_url=location.href.replace(/&/g,'[a_t_r]');
+				// let from_url='https://nujin.com/forum.php?mod=forumdisplay&fid=225&a=b'.replace(/&/g,'[a_t_r]');
+				from_url=from_url.replace(/=/g,'[e_t_r]');
+				let src=`http://127.0.0.1:8848?orderids=${list}&username=${username}&from_url=${from_url}`;
+				for(const [key,val] of Object.entries(orders)){
+					src+=`&${key}=${val}`
+				};
+				// console.log(src);
+				// return;
+				window.open(src,'_self');
 		},
 		placeOrder(hishow = true) {
-			// 立即购买
+			// 订阅盘前交易信号
 			/* console.log(Types);
 			console.log($(this.$el)); */
+			this.orderConfirm();return;
 			this.$store.commit(Types.setLocationEl, {
 				element: this.$el
 			});
@@ -456,14 +472,6 @@ export default {
 					}
 				}
 			};
-			/* if(this.strategy.discount_price===undefined){
-				
-				this.original_price={
-					txt: '会员折扣单价（元/月）：',
-					val: this.strategy.price*0.1.toFixed(4),
-					disabled: true
-				},
-			}; */
 			console.log(orders.data);
 			if (this.c_component.datas.type === '荐股') {
 				orders.data.price.txt = "单价（元/月）：";
@@ -472,6 +480,21 @@ export default {
 				orders.data.period.disabled = false;
 			};
 			this.orders = orders;
+		},
+		AgentDeliveryOrder(self,{hishow,order_list}){
+			// 代理转发中支付命令，触发的函数
+			this.$store.commit(Types.setLocationEl, {
+				element: this.$el
+			});
+			this.agent_orders = {
+				hishow,
+				data:{
+					order_list:{
+						txt:'订单号',
+						val:order_list
+					}
+				}
+			};
 		},
 		profitList() {
 			/*查看更多收益统计*/

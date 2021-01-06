@@ -9,7 +9,7 @@ export default {
 			select_datas: {
 				head_txt: '购买策略',
 				styleobj: { /*如果传递了bottom,初始位置就以bottome为准，否则初始位置就居中*/
-					'minWidth': '300px',
+					'minWidth': '315px',
 					'height': '280px',
 					'background': 'white',
 
