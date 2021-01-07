@@ -40,7 +40,7 @@
 					<span class="k_bold" v-text="c_component.datas.name"></span>
 					<span class="k_bold" v-text="c_component.datas.type"></span>
 				</div>
-				<div>
+				<!-- <div>
 					<input type="button" value="一键代发"
 						v-if="vip_level===true"
 						@click="handleAgent"
@@ -49,7 +49,27 @@
 						value="订阅盘前交易信号" 
 						@click='placeOrder'
 					>
-				</div>
+					<input 
+					type="button" 
+					value="关注公众号"
+					@click="wxGZHstatus"
+					>
+				</div> -->
+			</div>
+			<div class="action_wrapper boxs clearfix">
+				<input type="button" value="一键代发"
+					v-if="vip_level===true"
+					@click="handleAgent"
+				>
+				<input type="button" 
+					value="订阅盘前交易信号" 
+					@click='placeOrder'
+				>
+				<input 
+				type="button" 
+				value="关注公众号"
+				@click="wxGZHstatus"
+				>
 			</div>
 			<div class="stg_status boxs" v-if="strategy.need_back_test===true">
 				策略运行状态：等待运算结果

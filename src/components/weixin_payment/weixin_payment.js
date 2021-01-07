@@ -10,8 +10,8 @@ export default {
       select_datas: {
         head_txt: '微信购买',
         styleobj: { /*如果传递了bottom,初始位置就以bottome为准，否则初始位置就居中*/
-          'minWidth': '300px',
-          'height': '310px',
+          'minWidth': '260px',
+          'height': '290px',
           'background': '#ffffff',
           /*背景颜色*/
           'multiple': {
@@ -55,7 +55,7 @@ export default {
 				  'height':'195px',
 				  'width': '200px'
 			  });
-			  this.status='扫一扫，关注公众号'
+			  this.status='扫一扫，关注微信公众号'
 			  this.select_datas.head_txt='关注公众号'
 		  })
 	  }else{

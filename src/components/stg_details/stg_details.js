@@ -402,6 +402,8 @@ export default {
 		orderConfirm(){
 			// 跳转到确认订单界面
 				let username = this.basefn.getUsername();
+				let p_single_code=this.basefn.queryToObj().s_code;
+				if(window.s_code){p_single_code=window.s_code};
 				if (location.href.includes('localhost')) {
 					username = 'lcs11';
 				};
@@ -412,7 +414,8 @@ export default {
 					indic_name:this.c_component.datas.name,
 					indic_type:this.c_component.datas.type,
 					indic_price:this.strategy.price,
-					discount_price:this.strategy.discount_price!==undefined?this.strategy.discount_price:'false'
+					discount_price:this.strategy.discount_price!==undefined?this.strategy.discount_price:'false',
+					p_single_code:p_single_code!=undefined?p_single_code:'false'
 				}
 				
 				
@@ -428,10 +431,47 @@ export default {
 				// return;
 				window.open(src,'_self');
 		},
-		placeOrder(hishow = true) {
+		wxGZHstatus(){
+			let username = this.basefn.getUsername();
+			if(location.href.includes('localhost')){
+				username='lcs11';
+			}else{
+				if (!username) {
+					username='';
+				};	
+			};
+			let data = {
+				username
+			};
+			console.log(data);
+			const src = `/account/get_wx_fellow_status/`;
+			return new Promise((resolve)=>{
+				this.basefn.ajaxfn(`${this.url_obj.shuo_url}${src}`, 'POST', 'json', data, (res) => {
+					console.log(res);
+					const {result,data}=res;
+					if(result==='success'){
+						if(data===true){
+							this.$store.commit(Types.setLocationEl, {
+								element: this.$el
+							});
+							this.weixin = {
+								hishow: true,
+								code_url:'https://aupool.cn/static/img/wxsubscription_1.c5a6194.jpg',
+								out_trade_no:'wx_gzh'
+							};
+							resolve(true)
+						}
+					}
+				})
+			})
+			
+		},
+		async placeOrder(hishow = true) {
 			// 订阅盘前交易信号
-			/* console.log(Types);
-			console.log($(this.$el)); */
+			if(this.c_component.datas.name===undefined){
+				alert(`策略${this.c_component.datas.name},不存在！`);
+				return
+			};
 			this.orderConfirm();return;
 			this.$store.commit(Types.setLocationEl, {
 				element: this.$el
@@ -480,6 +520,14 @@ export default {
 				orders.data.period.disabled = false;
 			};
 			this.orders = orders;
+		},
+		async placeOrder(hishow = true) {
+			// 订阅盘前交易信号
+			if(this.c_component.datas.name===undefined){
+				alert(`策略${this.c_component.datas.name},不存在！`);
+				return
+			};
+			this.orderConfirm();
 		},
 		AgentDeliveryOrder(self,{hishow,order_list}){
 			// 代理转发中支付命令，触发的函数

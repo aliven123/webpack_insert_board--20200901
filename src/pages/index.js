@@ -17,7 +17,7 @@ if(env=='development'){
 		bin_url:'http://10.88.71.83:23333',
 		shuo_url:'http://10.88.71.83:8008', */
 		
-		lai_url:'http://10.88.71.83:8006',
+		lai_url:'http://10.88.71.83:23333',
 		bin_url:'http://10.88.71.83:23333',
 		shuo_url:'http://10.88.71.83:8008'
 	};

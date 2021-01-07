@@ -103,15 +103,6 @@ export default {
 				price
 			} = this.order_data;
 			let username = this.basefn.getUsername();
-			/* if(location.href.includes('localhost')){
-				
-				username='lcs11';
-			}else{
-				if (!username) {
-					alert('用户未登录，请登录后再试');
-					return;
-				};	
-			}; */
 			if(location.href.includes('localhost')){
 				username='lcs11';
 			}else{

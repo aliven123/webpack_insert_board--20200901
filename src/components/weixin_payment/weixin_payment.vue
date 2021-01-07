@@ -7,7 +7,9 @@
 				class="iconfont iconguanbi" @click="close">
 			</span>
 			<div class="mainctn wx_payment">
-				<div class="total_price_ctn">合计付款：{{weixin_obj.total_price}}元</div>
+				<div class="total_price_ctn" v-if="weixin_obj.out_trade_no!=='wx_gzh'">
+					合计付款：{{weixin_obj.total_price}}元
+				</div>
 				<div id="qrcode" class="boxs">
 					<img v-if="weixin_obj.code_url.includes('http')" class="wx_gzh" :src="weixin_obj.code_url" alt="">
 				</div>
