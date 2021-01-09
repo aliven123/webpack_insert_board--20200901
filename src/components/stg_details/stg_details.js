@@ -8,6 +8,8 @@ const toggle_value = '策略详情';
 // 搜索引擎拼接查询字符串,使用的键
 const s_indicname='s_indicname',s_indic_type='s_indic_type',s_SecurityID='s_SecurityID',s_code='s_code';
 let sort_id = undefined;
+let order_confirm_url=`https://nujin.com/orderConfirm/`;
+if(location.href.includes('localhost')){order_confirm_url='http://127.0.0.1:8848'};
 export default {
 	name: 'stg_details',
 	/* 策略商城明细 */
@@ -423,7 +425,7 @@ export default {
 				let from_url=location.href.replace(/&/g,'[a_t_r]');
 				// let from_url='https://nujin.com/forum.php?mod=forumdisplay&fid=225&a=b'.replace(/&/g,'[a_t_r]');
 				from_url=from_url.replace(/=/g,'[e_t_r]');
-				let src=`http://127.0.0.1:8848?orderids=${list}&username=${username}&from_url=${from_url}`;
+				let src=`${order_confirm_url}?orderids=${list}&username=${username}&from_url=${from_url}`;
 				for(const [key,val] of Object.entries(orders)){
 					src+=`&${key}=${val}`
 				};

@@ -140,8 +140,8 @@ export default {
 			handler: function(newval, oldval) {
 				this.code = newval.code;
 				this.lai_url = this.url_obj.lai_url;
-				// this.username = this.basefn.getUsername();
-				this.username = 123;
+				this.username = this.basefn.getUsername();
+				// this.username = 123;
 				this.investmentAdvice();
 			}
 		}

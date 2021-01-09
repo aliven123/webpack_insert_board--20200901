@@ -1,4 +1,6 @@
 const init_str='--';
+let order_confirm_url=`https://nujin.com/orderConfirm/`;
+if(location.href.includes('localhost')){order_confirm_url='http://127.0.0.1:8848'};
 export default {
 	name: 'aupool_agent_delivery',
 	data: function() {
@@ -371,24 +373,45 @@ export default {
 			this.setIptStr('');
 
 		},
+		filterOrders(){
+			// 过滤未支付的代理转发订单列表
+			console.log(this.delivery_obj.datas);
+			console.log(this.order_list);
+			const order_list=this.order_list.slice(0);
+			return order_list.filter((current_val)=>{
+				let result=false;
+				for(const item of this.delivery_obj.datas){
+					if(current_val===item.orderid && item.pay_state==='未支付'){
+						result=true;
+					}
+				};
+				return result
+			})
+		},
 		AgentDeliveryOrder(){
 			// 一键代发触发的函数
 			this.status=init_str;
 			if(this.order_list.length===0){
 				this.status='请选择要支付的策略！'
 				return;
-			};
+			}else{
+				let list=this.filterOrders();
+				console.log(list);
+				if(list.length===0){
+					this.status='选中策略已支付！'
+					return;
+				}
 			// 测试确认订单单页面
-				const list=this.order_list.join("_");
+				list=list.join("_");
 				const username=this.basefn.localUsername();
 				// 传递过去的from_ur中有&符号，防止确认页面在拿到url，以&分割键值对时，错误分组，导致错误
 				let from_url=location.href.replace(/&/g,'[a_t_r]');
 				// let from_url='https://nujin.com/forum.php?mod=forumdisplay&fid=225&a=b'.replace(/&/g,'[a_t_r]');
 				from_url=from_url.replace(/=/g,'[e_t_r]');
-				const src=`http://127.0.0.1:8848?orderids=${list}&username=${username}&from_url=${from_url}`;
+				const src=`${order_confirm_url}?orderids=${list}&username=${username}&from_url=${from_url}`;
 				window.open(src,'_self');
 			// 测试确认订单单页面
-			
+			};
 			
 			
 			/* this.$parent.$emit('closeModel',{
