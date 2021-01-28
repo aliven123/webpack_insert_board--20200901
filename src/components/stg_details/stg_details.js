@@ -18,6 +18,7 @@ export default {
 			profit_picture: null,
 			SecurityID,
 			vip_level:false,
+			white_list:['专家','金池','组合'],
 			strategy: {
 				need_back_test: false,
 				locking: false, //现有持仓和下单统计蒙版的开关
@@ -253,11 +254,12 @@ export default {
 			// 重置url,避免用户拿到推广链接点击复制推广链接，拼接查询字符串错误（重复）
 			const reset_url=this.resetUrl();
 			console.log(reset_url);
+			console.log(this.searchDatas.ipt_str)
 			window.history.pushState(null,null,reset_url);
 			const promote_url = await this.setPromoteUrl(username, {
 				indicname: this.c_component.datas.name,
 				style: this.c_component.datas.type,
-				SecurityID: this.SecurityID
+				SecurityID:this.searchDatas.ipt_str.split(' ')[0]
 			});
 			this.$el.appendChild(input);
 			input.setAttribute('value', promote_url);
@@ -360,7 +362,7 @@ export default {
 			// return;
 			this.weixin = {
 				hishow,
-				code_url: 'https://aupool.cn/static/img/wxsubscription_1.c5a6194.jpg',
+				code_url: 'https://nujin.com/source/plugin/study_onlineservice/images/qrcode.jpg',
 				out_trade_no: ''
 			};
 		},
@@ -408,9 +410,9 @@ export default {
 				if(window.s_code){p_single_code=window.s_code};
 				if (location.href.includes('localhost')) {
 					username = 'lcs11';
+					// username = '机器人';
 				};
 				const list='false';
-				
 				const orders={
 					SecurityID:this.strategy.profit[0] ? this.strategy.profit[0].val : 'false',
 					indic_name:this.c_component.datas.name,
@@ -418,9 +420,8 @@ export default {
 					indic_price:this.strategy.price,
 					discount_price:this.strategy.discount_price!==undefined?this.strategy.discount_price:'false',
 					p_single_code:p_single_code!=undefined?p_single_code:'false'
-				}
-				
-				
+				};
+				console.log(orders);
 				// 传递过去的from_ur中有&符号，防止确认页面在拿到url，以&分割键值对时，错误分组，导致错误
 				let from_url=location.href.replace(/&/g,'[a_t_r]');
 				// let from_url='https://nujin.com/forum.php?mod=forumdisplay&fid=225&a=b'.replace(/&/g,'[a_t_r]');
@@ -458,10 +459,12 @@ export default {
 							});
 							this.weixin = {
 								hishow: true,
-								code_url:'https://aupool.cn/static/img/wxsubscription_1.c5a6194.jpg',
+								code_url:'https://nujin.com/source/plugin/study_onlineservice/images/qrcode.jpg',
 								out_trade_no:'wx_gzh'
 							};
 							resolve(true)
+						}else{
+							alert('已关注公众号！');
 						}
 					}
 				})
@@ -555,7 +558,7 @@ export default {
 				this.strategy.toggle_value = toggle_value;
 				this.strategy.show_num = 9;
 			};
-			this.HomeCtnHeight();
+			// this.HomeCtnHeight();
 		},
 		toggleComponent(cpt_name, item) {
 			this.$store.commit(Types[cpt_name], {
@@ -578,6 +581,7 @@ export default {
 			},src = '/account/get_author_type/';
 			// this.SecurityID=data.code;
 			if(location.href.includes('localhost')){data.username='nujin'}
+			// if(location.href.includes('localhost')){data.username='努金'}
 			if (data.username===false) {
 				return;
 			};
@@ -590,7 +594,6 @@ export default {
 			const {
 				datas
 			} = this.c_component;
-			// console.log(datas);
 			let data = {
 					username: this.basefn.getUsername(),
 					indicname: datas.name,
@@ -599,12 +602,17 @@ export default {
 					code: this.searchDatas.ipt_str
 				},
 				src = '/quan_language/getIndicatorDetail/';
-			// this.SecurityID=data.code;
-			if (sort_id !== undefined) {
+			if(location.href.includes('localhost')){
+				data.username='admin'
+			};
+			if (Number.parseInt(sort_id) === 1) {
+				// 发帖小图进入详情页,indicname重置为空
 				data.indicname = ''
+			}else if(sort_id!==undefined && datas.page_from!=='kline'){
+				// 今日牛股进入，sort_id跟路由上的sort_id关联；value是indicname,但是上一页不能为home页
+				data.indicname = sort_id
 			};
 			this.basefn.ajaxfn(`${this.url_obj.shuo_url}${src}`, 'POST', 'json', data, (res) => {
-				console.log(res);
 				sort_id = undefined;
 				// console.log(data.retestsign);
 				if (data.retestsign === true) return; /*触发后台接口,计算收益曲线,前台不刷新 */
@@ -628,11 +636,12 @@ export default {
 					locking,
 					need_back_test
 				} = res;
-				// this.SecurityID=code;
+				this.SecurityID=code;
 				// this.searchDatas.ipt_str=code;
 				this.profit_picture = profit_picture;
 				// console.log(result);
 				this.c_component.datas.name = indicname;
+				
 				// console.log(code);
 				if (result == 'ok') {
 					this.strategy.need_back_test = need_back_test;
@@ -645,6 +654,9 @@ export default {
 					this.strategy.profit = [];
 					this.strategy.base_info = [];
 					this.strategy.locking = locking;
+					if(/^\d+com$/i.test(indicname)){
+						this.c_component.datas.type='组合';
+					};
 					if (base_info && base_info.length > 0) {
 						/* for(let item of base_info){
 	     					this.strategy.base_info.push(item);
@@ -659,7 +671,7 @@ export default {
 							this.strategy.profit.push(item);
 						};
 						this.searchobj.init_txt = profit[0].val;
-						this.SecurityID = this.searchobj.init_txt.split(' ')[0];
+						// this.SecurityID = this.searchobj.init_txt.split(' ')[0];
 						this.searchDatas.ipt_str = this.searchobj.init_txt;
 					};
 					console.log(this.strategy);
@@ -667,7 +679,7 @@ export default {
 					if (retestsign == "true") {
 						this.getAllStg(null, true)
 					};
-					if (this.strategy.type == '专家' || this.strategy.type == '金池') {
+					if (this.white_list.includes(this.strategy.type)) {
 						if (resdata) {
 							this.chart_data.data = {
 								dates: DATETIME,
@@ -759,17 +771,18 @@ export default {
 		HomeCtnHeight(home_height) {
 			// 相对定位父盒子的高度
 			this.$nextTick(() => {
-				// console.log($(this.$el).height());
 				setTimeout(() => {
+					const wrapper_height=Math.ceil($(this.$el).eq(0).outerHeight(true));
+					console.log(wrapper_height);
 					this.$store.commit(Types.setHomeHeight, {
-						home_height: home_height ? home_height : $(this.$el).height()
+						home_height: home_height ? home_height : wrapper_height
 					});
-				}, 200)
+				}, 100)
 			})
 		},
 		closeModel(datas){
 			// 关闭模态框函数
-			console.log(datas);
+			// console.log(datas);
 			for(let key in datas){
 				this[key].hishow=datas[key].hishow;
 			}
@@ -777,12 +790,11 @@ export default {
 	},
 	created() {
 		// 使用切换时传递过来的SecurityID，作为收益统计的对象；
-		console.log(this.c_component.datas);
+		// console.log(this.c_component.datas);
 		if (!this.basefn.IsPC) {
 			this.searchDatas.ipt_style.width = '130px'
 		};
 		this.searchDatas.ipt_str = this.c_component.datas.SecurityID;
-		console.log(this.searchDatas.ipt_str);
 
 		// 如果路由上有code,则以路由上的code为准
 		const {
@@ -798,10 +810,11 @@ export default {
 		};
 		this.getAuthorType();
 		this.getAllStg();
-		// this.initSearchPools();
 	},
 	mounted() {
 		this.$on('closeModel',this.closeModel)
+	},
+	updated(){
 		this.HomeCtnHeight();
 	}
 }

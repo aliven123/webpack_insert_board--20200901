@@ -204,10 +204,12 @@ export default {
 			let username;
 			if(location.href.includes('localhost')){
 				username='lcs11';
+				data.code='000002.SZ';
 			}else{
 				username=this.basefn.getUsername();
 			};
 			Object.assign(data,{username});
+			console.log(data);
 			if (data.code == '' || data.code == undefined) return;
 			this.basefn.ajaxfn(`${this.url_obj.lai_url}${url}`, "GET", "json", data, (res) => {
 				console.log(res);
@@ -234,22 +236,7 @@ export default {
 			})
 		},
 		toggleComponent(cpt_name, item) {
-			import('store/types.js').then(Types => {
-				this.$store.commit(Types[cpt_name], {
-					// stg_details,必须和index.js引入的组件名保持一致
-					current: Types.STG_DETAILS,
-					datas: {
-						name: item.indicname,//点击的策略名
-						type: '专家',
-						SecurityID: this.code,
-						indic_type:this.indic_pool.type,//当前策略列表的过滤条件
-						page_from:''
-					}
-				})
-			})
-
-		},
-		toggleComponent(cpt_name, item) {
+			console.log(item);
 			import('store/types.js').then(Types => {
 				this.$store.commit(Types[cpt_name], {
 					// stg_details,必须和index.js引入的组件名保持一致
@@ -259,7 +246,7 @@ export default {
 						type: '专家',
 						SecurityID: item.SecurityID ? item.SecurityID:this.code,
 						indic_type:this.indic_pool.type,//当前策略列表的过滤条件
-						page_from:''
+						page_from:'kline',
 					}
 				})
 			})

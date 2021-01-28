@@ -9,20 +9,18 @@ const mutations={
 	[Types.toggleComponent](state,cpt){
 		const c_component=JSON.parse(JSON.stringify(state.c_component))
 		c_component.current=cpt.current;
-		console.log(cpt.datas);
+		const new_obj={};
 		for(const key of Object.keys(cpt.datas)){
 			if(cpt.datas[key]){
-				Object.assign(c_component.datas,{
-					[key]:cpt.datas[key]
-				})
+				console.log(cpt.datas[key])
+				new_obj[key]=cpt.datas[key]
 			}
 		};
+		Object.assign(c_component.datas,new_obj);
 		this.commit('setDatas',{
 			key:'c_component',
 			val:c_component
 		});
-		console.log(c_component);
-		console.log(state.c_component);
 	},
 	[Types.setLocationEl](state,datas){
 		// 弹窗定位相对的元素节点信息

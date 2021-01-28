@@ -607,7 +607,7 @@ export default {
 				this.basefn.ajaxfn(`${this.url_obj.bin_url}/get_market_data/`,
 				 "POST", "json",datas, (res) => {
 					// 更新数据画图
-					// console.log(res);
+					console.log(res);
 					let {data,result,c_board}=res;
 					if(result=='success'){
 						this.c_board=c_board;
@@ -758,7 +758,20 @@ export default {
 				width=targetobj.barwidth;
 			};
 			return width
-		},		
+		},
+		randerMarket(getData,param_arr){
+			/* 如果不包含indicators,则显示行情界面 */
+			let key_val='';
+			for(const item of param_arr){
+				// console.log(item);
+				key_val=getData(item,'=');
+				if(key_val[0]=='SecurityID'){
+					this.SecurityID=key_val[1]
+					// 传递rank_indicators,策略排行中的数据
+					this.board.datas={code:key_val[1]};
+				};
+			}
+		},	
 		initData(){
 			//根据路由传递的参数，获取证券代码，名称和分类
 			// let str=window.location.search.substr(1);
@@ -767,9 +780,10 @@ export default {
 				return str.split(split_str)
 			};
 			const param_arr=getData(str,'&')
-			// console.log(param_arr,str);
+			console.log(param_arr);
 			let key_val=null;
-			let queryToObj=this.basefn.queryToObj();//console.log(s_code);
+			let queryToObj=this.basefn.queryToObj();
+			console.log(queryToObj);
 			let indic_name=queryToObj[s_indicname],
 			SecurityID=queryToObj[s_SecurityID],s_code=queryToObj.s_code,type=queryToObj.type;
 			if(type===undefined){type='专家'};
@@ -785,6 +799,7 @@ export default {
 				return;
 			};
 			// 通过查询字符串，获得证券代码，名称，和分类
+			console.log(param_arr,str);
 			if(param_arr.length>0){
 				if(str.includes('indicator')||location.search.includes('sort_id')){
 					// 如果包含indicator,首页直接切换到stg_details
@@ -801,19 +816,13 @@ export default {
 							continue;
 						};
 					};
-					console.log(indicator);
+					/* if(queryToObj.sort_id!==undefined && Number.parseInt(queryToObj.sort_id)!==1){
+						indicator=queryToObj.sort_id;
+					};
+					console.log(indicator); */
 					this.renderStgdetails(indicator,type,SecurityID);
 				}else{
-					/* 如果不包含indicators,则显示行情界面 */
-					for(const item of param_arr){
-						// console.log(item);
-						key_val=getData(item,'=');
-						if(key_val[0]=='SecurityID'){
-							this.SecurityID=key_val[1]
-							// 传递rank_indicators,策略排行中的数据
-							this.board.datas={code:key_val[1]};
-						};
-					}
+					this.randerMarket(getData,param_arr);
 				};
 				
 			}else{
