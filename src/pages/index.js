@@ -19,7 +19,7 @@ if(env=='development'){
 		
 		lai_url:'http://10.88.71.83:23333',
 		bin_url:'http://10.88.71.83:23333',
-		shuo_url:'http://10.88.71.83:8008'
+		shuo_url:'http://10.88.71.83:23333'
 	};
 }else if(env=='production'){
 	Vue.prototype.url_obj={

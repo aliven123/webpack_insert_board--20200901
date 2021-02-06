@@ -3,7 +3,7 @@ import * as Types from 'store/types';
 import {
 	mapState
 } from 'vuex';
-const SecurityID = '000001.SZ';
+const SecurityID = '600000.SH';
 const toggle_value = '策略详情';
 // 搜索引擎拼接查询字符串,使用的键
 const s_indicname='s_indicname',s_indic_type='s_indic_type',s_SecurityID='s_SecurityID',s_code='s_code';
@@ -77,7 +77,8 @@ export default {
 						index: "序号",
 						code: "证券代码",
 						codename: "名称",
-						holdnum: "持仓量"
+						holdnum: "持仓量",
+						floating_profit:'持仓浮盈'
 					},
 					body: []
 				}
@@ -473,61 +474,10 @@ export default {
 		},
 		async placeOrder(hishow = true) {
 			// 订阅盘前交易信号
-			if(this.c_component.datas.name===undefined){
-				alert(`策略${this.c_component.datas.name},不存在！`);
+			if(!this.basefn.getUsername()){
+				alert(`请登录后再试！`);
 				return
 			};
-			this.orderConfirm();return;
-			this.$store.commit(Types.setLocationEl, {
-				element: this.$el
-			});
-			// 证券代码
-			let code = this.strategy.profit[0] ? this.strategy.profit[0].val : null;
-			const orders = {
-				hishow,
-				data: {
-					name: {
-						val: this.c_component.datas.name,
-						code,
-						txt: '策略名',
-						disabled: false
-					},
-					type: {
-						txt: '策略类型',
-						val: this.c_component.datas.type,
-						disabled: false
-					},
-					price: {//如果discount_price不是undefined,price的描述字段就是会员折扣价
-						txt: this.strategy.discount_price!==undefined ? '会员折扣单价（元/月）：':'单价（元/月）：',
-						val: this.strategy.price,
-						disabled: true,
-						hishow:true
-					},
-					discount_price:{
-						//如果discount_price是undefined,就显示会员折扣价的字段，引导用户成会员，否则不显示，通过hishow控制
-						txt: '会员折扣单价（元/月）：',
-						val: this.strategy.price*0.9.toFixed(2),
-						disabled: true,
-						hishow:this.strategy.discount_price===undefined ? true:false
-					},
-					period: {
-						txt: '购买周期（月）',
-						val: '12',
-						disabled: false
-					}
-				}
-			};
-			console.log(orders.data);
-			if (this.c_component.datas.type === '荐股') {
-				orders.data.price.txt = "单价（元/月）：";
-				orders.data.period.txt = "购买周期（月）：";
-				orders.data.period.val = "";
-				orders.data.period.disabled = false;
-			};
-			this.orders = orders;
-		},
-		async placeOrder(hishow = true) {
-			// 订阅盘前交易信号
 			if(this.c_component.datas.name===undefined){
 				alert(`策略${this.c_component.datas.name},不存在！`);
 				return
@@ -589,21 +539,32 @@ export default {
 				this.vip_level=res.vip_level!=='' ? true : false;
 			})
 		},
+		filterIndicname(){
+			let indicname=this.c_component.datas.name;
+			let nun_word=/[^\w\s]/gi;
+			let black_word=/\bexpert\w?\b|\ben\b/gi;
+			if(indicname){
+				indicname=indicname.replace(nun_word,'');
+				indicname=indicname.replace(black_word,'');
+			};
+			return indicname.trim();
+		},
 		getAllStg(callback, retestsign = false) {
 			/*初始化策略详细数据*/
-			const {
+			/* const {
 				datas
-			} = this.c_component;
+			} = this.c_component; */
 			let data = {
-					username: this.basefn.getUsername(),
-					indicname: datas.name,
+					indicname:this.filterIndicname(),
 					retestsign,
 					sort: 1,
 					code: this.searchDatas.ipt_str
 				},
 				src = '/quan_language/getIndicatorDetail/';
 			if(location.href.includes('localhost')){
-				data.username='admin'
+				Object.assign(data,{username:'admin'})
+			}else if(this.basefn.getUsername()!==false){
+				Object.assign(data,{username:this.basefn.getUsername()})
 			};
 			if (Number.parseInt(sort_id) === 1) {
 				// 发帖小图进入详情页,indicname重置为空

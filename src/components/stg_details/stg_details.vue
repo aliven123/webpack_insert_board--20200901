@@ -199,16 +199,16 @@
 						  prop="order_d"
 						  label="下单日期">
 						</el-table-column>
-						<!-- <el-table-column
+						<el-table-column
 						  prop="code"
 						  label="证券代码"
-						  width="180">
+						  width="100">
 						</el-table-column>
 						<el-table-column
 						  prop="codename"
 						  label="名称"
-						  width="180">
-						</el-table-column> -->
+						  width="120">
+						</el-table-column>
 						<el-table-column
 						  prop="way"
 						  label="交易方向">
@@ -257,6 +257,8 @@
 								<el-table-column prop="codename" label="名称">
 								</el-table-column>
 								<el-table-column prop="holdnum" label="持仓量">
+								</el-table-column>
+								<el-table-column prop="floating_profit" label="持仓浮盈">
 								</el-table-column>
 						</el-table>
 					</template>
